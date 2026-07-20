@@ -3,6 +3,7 @@ package com.atlas.backend.controller;
 import com.atlas.backend.dto.RegisterRequest;
 import com.atlas.backend.dto.RegisterResponse;
 import com.atlas.backend.service.AuthenticationService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +19,9 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public RegisterResponse register(@RequestBody RegisterRequest request) {
+    public RegisterResponse register(
+            @Valid @RequestBody RegisterRequest request) {
 
         return authenticationService.register(request);
-
     }
 }
