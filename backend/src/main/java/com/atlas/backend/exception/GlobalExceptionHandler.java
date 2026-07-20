@@ -24,4 +24,15 @@ public class GlobalExceptionHandler {
 
         return errors;
     }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Map<String, String> handleInvalidCredentials(
+            InvalidCredentialsException ex) {
+
+        return Map.of(
+                "message",
+                ex.getMessage()
+        );
+    }
 }

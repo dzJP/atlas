@@ -1,5 +1,7 @@
 package com.atlas.backend.controller;
 
+import com.atlas.backend.dto.LoginRequest;
+import com.atlas.backend.dto.LoginResponse;
 import com.atlas.backend.dto.RegisterRequest;
 import com.atlas.backend.dto.RegisterResponse;
 import com.atlas.backend.service.AuthenticationService;
@@ -23,5 +25,13 @@ public class AuthenticationController {
             @Valid @RequestBody RegisterRequest request) {
 
         return authenticationService.register(request);
+    }
+
+    @PostMapping("/login")
+    public LoginResponse login(
+            @Valid @RequestBody LoginRequest request) {
+
+        return authenticationService.login(request);
+
     }
 }

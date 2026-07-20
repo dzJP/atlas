@@ -1,11 +1,14 @@
 package com.atlas.backend.service;
 
+import com.atlas.backend.dto.LoginRequest;
+import com.atlas.backend.dto.LoginResponse;
 import com.atlas.backend.dto.RegisterRequest;
 import com.atlas.backend.dto.RegisterResponse;
 import com.atlas.backend.entity.Business;
 import com.atlas.backend.entity.Role;
 import com.atlas.backend.entity.User;
 import com.atlas.backend.exception.EmailAlreadyExistsException;
+import com.atlas.backend.exception.InvalidCredentialsException;
 import com.atlas.backend.repository.BusinessRepository;
 import com.atlas.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -46,6 +49,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return new RegisterResponse(
                 business.getId(),
                 user.getId()
+        );
+    }
+
+    @Override
+    public LoginResponse login(LoginRequest request) {
+
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(InvalidCredentialsException::new);
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new InvalidCredentialsException();
+        }
+
+        return new LoginResponse(
+                user.getId(),
+                "Login successful."
         );
     }
 
