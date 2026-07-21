@@ -14,6 +14,7 @@ import com.atlas.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.atlas.backend.security.JwtService;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -21,15 +22,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final BusinessRepository businessRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     public AuthenticationServiceImpl(
             UserRepository userRepository,
             BusinessRepository businessRepository,
-            BCryptPasswordEncoder passwordEncoder) {
+            BCryptPasswordEncoder passwordEncoder,
+            JwtService jwtService) {
 
         this.userRepository = userRepository;
         this.businessRepository = businessRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -62,10 +66,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new InvalidCredentialsException();
         }
 
-        return new LoginResponse(
-                user.getId(),
-                "Login successful."
-        );
+        String token = jwtService.generateToken(user);
+
+        return new LoginResponse(token);
     }
 
     private Business createBusiness(RegisterRequest request) {
